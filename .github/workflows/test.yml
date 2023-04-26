@@ -19,12 +19,12 @@ jobs:
       - name: "Check out source tree"
         uses: actions/checkout@v3
 
-      - name: "Configure sysctl"
-        run: |
-          sudo sysctl net.ipv4.conf.all.proxy_arp=1
-          sudo sysctl net.ipv4.ip_forward=1
-          sudo sysctl net.ipv4.conf.all.forwarding=1
-          sudo iptables -P FORWARD ACCEPT
+      #- name: "Configure sysctl"
+      #  run: |
+      #    sudo sysctl net.ipv4.conf.all.proxy_arp=1
+      #    sudo sysctl net.ipv4.ip_forward=1
+      #    sudo sysctl net.ipv4.conf.all.forwarding=1
+      #    sudo iptables -P FORWARD ACCEPT
 
       - name: "Re-load dockerd with IPv6 enabled"
         run: |
