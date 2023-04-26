@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  snmpd-01:
+    container_name: snmpd-01
+    image: polinux/snmpd
+    command: >-
+      -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+    volumes:
+      - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
+#    sysctls:
+#      net.ipv4.ping_group_range: "0 429496729"
+    ports:
+      - "11161:161/udp"
+    tty: true
+    networks:
+      net-snmpd:
+        ipv4_address: 10.9.0.5
+        ipv6_address: 2001:db8:1:1::5
+    cap_add:
+      - NET_ADMIN
+
+  snmpd-02:
+    container_name: snmpd-02
+    image: polinux/snmpd
+    command: >-
+      -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+    volumes:
+      - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
+    ports:
+      - "12161:161/udp"
+    tty: true
+    networks:
+      net-snmpd:
+        ipv4_address: 10.9.0.6
+        ipv6_address: 2001:db8:1:1::6
+    cap_add:
+      - NET_ADMIN
+
+networks:
+  net-snmpd:
+    name: net-snmpd
+    driver_opts:
+      com.docker.network.bridge.name: br-snmpd
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 10.9.0.0/24
+        - subnet: 2001:db8:1:1::/120
