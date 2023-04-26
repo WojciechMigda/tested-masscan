@@ -69,5 +69,27 @@ jobs:
         run: |
           sudo apt-get install nmap
           sudo nmap --iflist
-          sudo nmap -sU -p 161 --disable-arp-ping -n --reason -vv 10.9.0.5-10.9.0.8 --packet-trace -d --traceroute -Pn
-          sudo nmap -sU -p 161 --disable-arp-ping -n --reason -vv -6 2001:db8:1:1::5-2001:db8:1:1::8 --packet-trace -d --traceroute -Pn
+          sudo nmap -sU -p 161 --disable-arp-ping -n --reason -vv 10.9.0.5 10.9.0.6 --packet-trace -d --traceroute -Pn
+          sudo nmap -sU -p 161 --disable-arp-ping -n --reason -vv -6 2001:db8:1:1::5 2001:db8:1:1::6 --packet-trace -d --traceroute -Pn
+
+      - name: "Build masscan"
+        run: |
+          make -C masscan -j3
+          sudo make -C masscan install
+
+      - name: "Sanity masscan scan"
+        run: |
+          sudo masscan -pU:161 \
+               --banners \
+               --rate 400 \
+               --wait 2 \
+               -vvv \
+               10.9.0.5 \
+               #
+          sudo masscan -pU:161 \
+               --banners \
+               --rate 400 \
+               --wait 2 \
+               -vvv \
+               10.9.0.5 \
+               -i br-snmpd --router-mac 02:42:0a:09:00:05
