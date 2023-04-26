@@ -46,4 +46,5 @@ networks:
     ipam:
       config:
         - subnet: 10.9.0.0/24
+          gateway: 10.9.0.1
         - subnet: 2001:db8:1:1::/120
