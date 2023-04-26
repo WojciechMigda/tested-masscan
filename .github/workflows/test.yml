@@ -45,15 +45,23 @@ jobs:
           docker network inspect bridge
           docker network inspect net-snmpd
 
-      - name: "Show interfaces"
+      - name: "Show interfaces (1/2)"
         run: |
           ip -4 addr
           ip -6 addr
 
-      - name: "Show routes"
+      - name: "Show interfaces (2/2)"
+        run: |
+          ifconfig
+
+      - name: "Show routes (1/2)"
         run: |
           ip -4 route
           ip -6 route
+
+      - name: "Show routes (2/2)"
+        run: |
+          route -n
 
       - name: "Show neighbors"
         run: |
