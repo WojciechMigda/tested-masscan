@@ -36,18 +36,22 @@ jobs:
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml up -d
           sleep 10
 
+      - name: "Add 10.1.0.253 IP address to router"
+        run: |
+          docker exec bird-router ip addr add 10.1.0.253/16 dev eth0
+          docker exec bird-router ip addr show
+
       - name: "Delete default route on router"
         run: |
           docker exec bird-router ip route del default
 
-      - name: "Add route to bird router"
+      - name: "Add default route on router"
         run: |
-          sudo ip route change 10.9.0.0/24 via 10.9.0.254 dev br-snmpd
+          docker exec bird-router ip route add default via 10.1.0.1
 
-      #- name: "Add 10.1.0.253 IP address to router"
+      #- name: "Add route to bird router"
       #  run: |
-      #    docker exec bird-router ip addr add 10.1.0.253/16 dev eth0
-      #    docker exec bird-router ip addr show
+      #    sudo ip route change 10.9.0.0/24 via 10.9.0.254 dev br-snmpd
 
       - name: "Sanity ping"
         run: |
