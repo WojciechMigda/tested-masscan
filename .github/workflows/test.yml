@@ -40,6 +40,10 @@ jobs:
         run: |
           docker exec bird-router ip route del default
 
+      - name: "Add route to bird router"
+        run: |
+          sudo ip route change 10.9.0.0/24 via 10.9.0.254 dev br-snmpd
+
       #- name: "Add 10.1.0.253 IP address to router"
       #  run: |
       #    docker exec bird-router ip addr add 10.1.0.253/16 dev eth0
