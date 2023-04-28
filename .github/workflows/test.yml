@@ -43,6 +43,7 @@ jobs:
       - name: "Sanity ping"
         run: |
           ping -c 2 10.9.0.5 # snmpd-01 ipv4
+          ping -c 2 10.9.0.254 # bird-router ipv4
           ping6 -c 2 2001:db8:1:1::5 # snmpd-01 ipv6
           #sudo tcpdump -i any -w ping-snmpd-01.pcap & ping -c 5 10.9.0.5 ; sudo kill $!
           sudo tcpdump -i any -w ping-snmpd-01.pcap & ping -c 2 10.9.0.5 ; sleep 1; sudo killall -e tcpdump
