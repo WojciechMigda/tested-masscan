@@ -1,11 +1,33 @@
 version: "3"
 
 services:
+  router:
+    container_name: bird-router
+    build:
+      context: ./router-containers
+    image: image-router
+    command: >-
+      -d -c /etc/bird/bird.custom.conf
+    volumes:
+      - ./bird.conf:/etc/bird/bird.custom.conf
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv6.conf.all.forwarding: 1
+      net.ipv4.ip_forward: 1
+    tty: true
+    networks:
+      net-snmpd:
+        ipv4_address: 10.9.0.254
+        ipv6_address: 2001:db8:1:1::00fe
+    cap_add:
+      - ALL
+
+
   snmpd-01:
     container_name: snmpd-01
     image: polinux/snmpd
     command: >-
-      -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
     volumes:
       - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
 #    sysctls:
@@ -24,7 +46,7 @@ services:
     container_name: snmpd-02
     image: polinux/snmpd
     command: >-
-      -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
     volumes:
       - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
     ports:

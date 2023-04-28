@@ -36,6 +36,10 @@ jobs:
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml up -d
           sleep 10
 
+      - name: "Delete default route on router"
+        run: |
+          docker exec bird-router ip route del default
+
       - name: "Sanity ping"
         run: |
           ping -c 2 10.9.0.5
@@ -76,7 +80,7 @@ jobs:
 
       - name: "Sanity nmap scan"
         run: |
-          sudo apt-get install nmap
+          sudo apt-get install -y nmap
           sudo nmap --iflist
           sudo nmap -sU -p 161 --disable-arp-ping -n --reason -vv 10.9.0.5 10.9.0.6 --packet-trace -d --traceroute -Pn
           sudo nmap -sU -p 161 --disable-arp-ping -n --reason -vv -6 2001:db8:1:1::5 2001:db8:1:1::6 --packet-trace -d --traceroute -Pn
@@ -102,3 +106,8 @@ jobs:
                -vvv \
                10.9.0.5 \
                -i br-snmpd --router-mac 02:42:0a:09:00:05
+
+      - name: "Show logs"
+        run: |
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs snmpd-01
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs router
