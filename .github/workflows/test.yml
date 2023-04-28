@@ -40,6 +40,11 @@ jobs:
         run: |
           docker exec bird-router ip route del default
 
+      #- name: "Add 10.1.0.253 IP address to router"
+      #  run: |
+      #    docker exec bird-router ip addr add 10.1.0.253/16 dev eth0
+      #    docker exec bird-router ip addr show
+
       - name: "Sanity ping"
         run: |
           ping -c 2 10.9.0.5 # snmpd-01 ipv4
