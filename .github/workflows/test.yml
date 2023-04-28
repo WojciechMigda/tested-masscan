@@ -42,8 +42,8 @@ jobs:
 
       - name: "Sanity ping"
         run: |
-          ping -c 2 10.9.0.5
-          ping6 -c 2 2001:db8:1:1::5
+          ping -c 2 10.9.0.5 # snmpd-01 ipv4
+          ping6 -c 2 2001:db8:1:1::5 # snmpd-01 ipv6
 
       - name: "Inspect networks"
         run: |
@@ -106,6 +106,14 @@ jobs:
                -vvv \
                10.9.0.5 \
                -i br-snmpd --router-mac 02:42:0a:09:00:05
+          sudo masscan -pU:161 \
+               --banners \
+               --rate 400 \
+               --wait 2 \
+               -vvv \
+               10.9.0.5 \
+               -i br-snmpd \
+               & sleep 30 ; sudo kill $!
 
       - name: "Show logs"
         run: |
