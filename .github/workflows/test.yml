@@ -20,10 +20,16 @@ jobs:
       - name: "Check out source tree"
         uses: actions/checkout@v3
 
+      - name: "Re-load dockerd with IPv6 enabled"
+        run: |
+          cat /etc/docker/daemon.json | perl -pe 's| }|, "ipv6": true, "fixed-cidr-v6": "2001:db8:1::/64" }|' | sudo tee /etc/docker/daemon.json > /dev/null; sudo systemctl restart docker; sleep 10
+
+
       - name: "Start containers"
         run: |
-          docker-compose -f $(pwd)/tests/resources/docker-compose.yml up --build -d
-          sleep 8
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml build
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml up -d
+          sleep 10
 
       - name: "Show logs"
         run: |
