@@ -1,72 +1,115 @@
 version: "3"
 
+
 services:
-  router:
-    container_name: bird-router
-    build:
-      context: ./router-containers
-    image: image-router
-    command: >-
-      -d -c /etc/bird/bird.custom.conf
-    volumes:
-      - ./bird.conf:/etc/bird/bird.custom.conf
-    sysctls:
-      net.ipv6.conf.all.disable_ipv6: 0
-      net.ipv6.conf.all.forwarding: 1
-      net.ipv4.ip_forward: 1
-    tty: true
-    networks:
-      net-snmpd:
-        ipv4_address: 10.9.0.254
-        ipv6_address: 2001:db8:1:1::00fe
-    cap_add:
-      - ALL
+    #### Base Images ##########################################################
+
+    seed_base_router:
+        build: ../Base_Images/router
+        image: seed_base_router
+        container_name: seed-base-router
+        command: " echo 'exiting ...' "
+
+    seed_base_host:
+        build: ../Base_Images/host
+        image: seed_base_host
+        container_name: seed-base-host
+        command: " echo 'exiting ...' "
+
+    #### as150 ################################################################
+    as150_router:
+        build: 
+            context: ./ix100
+            args:
+                BIRD_CONF: as150_bird.conf
+        image: as150-router
+        container_name: as150-router-10.150.0.254
+        cap_add:
+                - ALL
+        sysctls:
+                - net.ipv4.ip_forward=1
+        networks:
+            as150-net:
+                ipv4_address: 10.150.0.254
+            ix100-net:
+                ipv4_address: 10.100.0.150
+
+    as150_host:
+        build: ./host
+        image: seed-as-common-host
+        container_name: as150-host-10.150.0.71
+        environment:
+                DEFAULT_ROUTER: 10.150.0.254
+        cap_add:
+                - ALL
+        networks:
+            as150-net:
+                ipv4_address: 10.150.0.71
+
+    #### as151 ################################################################
+    as151_router:
+        build: 
+            context: ./ix100
+            args:
+                BIRD_CONF: as151_bird.conf
+        image: as151-router
+        container_name: as151-router-10.151.0.254
+        cap_add:
+                - ALL
+        sysctls:
+                - net.ipv4.ip_forward=1
+        networks:
+            as151-net:
+                ipv4_address: 10.151.0.254
+            ix100-net:
+                ipv4_address: 10.100.0.151
 
 
-  snmpd-01:
-    container_name: snmpd-01
-    image: polinux/snmpd
-    command: >-
-      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
-    volumes:
-      - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
-#    sysctls:
-#      net.ipv4.ping_group_range: "0 429496729"
-    ports:
-      - "11161:161/udp"
-    tty: true
-    networks:
-      net-snmpd:
-        ipv4_address: 10.9.0.5
-        ipv6_address: 2001:db8:1:1::5
-    cap_add:
-      - NET_ADMIN
+    as151_host:
+        image: seed-as-common-host
+        container_name: as151-host-10.151.0.71
+        environment:
+                DEFAULT_ROUTER: 10.151.0.254
+        cap_add:
+                - ALL
+        networks:
+            as151-net:
+                ipv4_address: 10.151.0.71
 
-  snmpd-02:
-    container_name: snmpd-02
-    image: polinux/snmpd
-    command: >-
-      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
-    volumes:
-      - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
-    ports:
-      - "12161:161/udp"
-    tty: true
-    networks:
-      net-snmpd:
-        ipv4_address: 10.9.0.6
-        ipv6_address: 2001:db8:1:1::6
-    cap_add:
-      - NET_ADMIN
 
+    #### IX  ############################################################
+
+    ix100_rs:
+        build: 
+            context: ./ix100
+            args:
+                BIRD_CONF: ix100_rs_bird.conf
+        image: ix100-rs
+        container_name: ix100-rs-10.100.0.100
+        networks:
+            ix100-net:
+                ipv4_address: 10.100.0.100
+
+                
 networks:
-  net-snmpd:
-    name: net-snmpd
-    driver_opts:
-      com.docker.network.bridge.name: br-snmpd
-    enable_ipv6: true
-    ipam:
-      config:
-        - subnet: 10.9.0.0/24
-          gateway: 10.9.0.1
-        - subnet: 2001:db8:1:1::/120
+    #### IX ############################################################
+    ix100-net:
+        ipam:
+            config:
+                - subnet: 10.100.0.0/24
+        name: seed-ix100-net
+
+    #### as150 ################################################################
+    as150-net:
+        ipam:
+            config:
+                - subnet: 10.150.0.0/24
+        name: seed-as150-net           
+
+    #### as151 ################################################################
+    as151-net:
+        ipam:
+            config:
+                - subnet: 10.151.0.0/24
+        name: seed-as151-net           
+                  
