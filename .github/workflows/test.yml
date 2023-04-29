@@ -46,6 +46,7 @@ jobs:
         run: |
           docker exec as150-router-10.150.0.254 ifconfig || true
           docker exec as150-router-10.150.0.254 route -n || true
+          docker exec as150-router-10.150.0.254 ping -c 2 101.150.0.71 || true
 
       - name: "Sanity ping from as150-host-10.150.0.71"
         run: |
