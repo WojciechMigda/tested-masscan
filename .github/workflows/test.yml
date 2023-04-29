@@ -46,15 +46,15 @@ jobs:
           docker network inspect seed-as150-net || true
           docker network inspect seed-as151-net || true
 
-      - name: "Inspect as150-router-10.150.0.254"
+      - name: "Inspect as150-router-10.150.0.54"
         run: |
-          docker exec as150-router-10.150.0.254 ifconfig || true
-          docker exec as150-router-10.150.0.254 route -n || true
-          docker exec as150-router-10.150.0.254 ping -c 2 101.150.0.71 || true
+          docker exec as150-router-10.150.0.54 ifconfig || true
+          docker exec as150-router-10.150.0.54 route -n || true
+          docker exec as150-router-10.150.0.54 ping -c 2 101.150.0.71 || true
 
       - name: "Sanity ping from as150-host-10.150.0.71"
         run: |
           docker exec as150-host-10.150.0.71 ifconfig || true
           docker exec as150-host-10.150.0.71 route -n || true
-          docker exec as150-host-10.150.0.71 ping -c 2 101.150.0.254 || true
+          docker exec as150-host-10.150.0.71 ping -c 2 101.150.0.54 || true
           docker exec as150-host-10.150.0.71 ping -c 2 101.151.0.71 || true

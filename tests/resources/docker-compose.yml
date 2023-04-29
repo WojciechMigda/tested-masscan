@@ -23,7 +23,7 @@ services:
             args:
                 BIRD_CONF: as150_bird.conf
         image: as150-router
-        container_name: as150-router-10.150.0.254
+        container_name: as150-router-10.150.0.54
         cap_add:
                 - ALL
         sysctls:
@@ -32,7 +32,7 @@ services:
 #                - net.ipv4.conf.all.rp_filter=0
         networks:
             as150-net:
-                ipv4_address: 10.150.0.254
+                ipv4_address: 10.150.0.54
             ix100-net:
                 ipv4_address: 10.100.0.150
 
@@ -41,7 +41,7 @@ services:
         image: seed-as-common-host
         container_name: as150-host-10.150.0.71
         environment:
-                DEFAULT_ROUTER: 10.150.0.254
+                DEFAULT_ROUTER: 10.150.0.54
         cap_add:
                 - ALL
         sysctls:
@@ -59,7 +59,7 @@ services:
             args:
                 BIRD_CONF: as151_bird.conf
         image: as151-router
-        container_name: as151-router-10.151.0.254
+        container_name: as151-router-10.151.0.54
         cap_add:
                 - ALL
         sysctls:
@@ -68,7 +68,7 @@ services:
 #                - net.ipv4.conf.all.rp_filter=0
         networks:
             as151-net:
-                ipv4_address: 10.151.0.254
+                ipv4_address: 10.151.0.54
             ix100-net:
                 ipv4_address: 10.100.0.151
 
@@ -77,7 +77,7 @@ services:
         image: seed-as-common-host
         container_name: as151-host-10.151.0.71
         environment:
-                DEFAULT_ROUTER: 10.151.0.254
+                DEFAULT_ROUTER: 10.151.0.54
         cap_add:
                 - ALL
         sysctls:
