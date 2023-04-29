@@ -36,6 +36,12 @@ jobs:
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as150_router
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as151_router
 
+      - name: "Inspect networks"
+        run: |
+          docker network inspect seed-ix100-net || true
+          docker network inspect seed-as150-net || true
+          docker network inspect seed-as151-net || true
+
       - name: "Inspect as150-router-10.150.0.254"
         run: |
           docker exec as150-router-10.150.0.254 ifconfig || true
