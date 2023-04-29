@@ -31,6 +31,7 @@ services:
 #                - net.ipv4.conf.default.rp_filter=0
 #                - net.ipv4.conf.all.rp_filter=0
         networks:
+            default:
             as150-net:
                 ipv4_address: 10.150.0.254
             ix100-net:
@@ -49,6 +50,7 @@ services:
 #                - net.ipv4.conf.default.rp_filter=0
 #                - net.ipv4.conf.all.rp_filter=0
         networks:
+            default:
             as150-net:
                 ipv4_address: 10.150.0.71
 
