@@ -39,4 +39,5 @@ jobs:
         run: |
           docker exec as150-host-10.150.0.71 ifconfig || true
           docker exec as150-host-10.150.0.71 route -n || true
+          docker exec as150-host-10.150.0.71 ping -c 2 101.150.0.254 || true
           docker exec as150-host-10.150.0.71 ping -c 2 101.151.0.71 || true
