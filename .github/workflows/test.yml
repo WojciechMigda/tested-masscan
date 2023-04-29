@@ -59,3 +59,4 @@ jobs:
           docker exec as150-host-10.150.0.71 ping -c 2 10.150.0.254 || true
           docker exec as150-host-10.150.0.71 ping -c 2 10.151.0.71 || true
           docker exec as150-host-10.150.0.71 mtr -c 1 -r -n 10.150.0.254 || true
+          docker exec as150-host-10.150.0.71 mtr -c 1 -r -n 10.151.0.71 || true
