@@ -109,7 +109,7 @@ networks:
         ipam:
             config:
                 - subnet: 10.100.0.0/24
-                  gateway: 10.100.0.1
+#                  gateway: 10.100.0.1
         name: seed-ix100-net
 
     #### as150 ################################################################
@@ -117,7 +117,7 @@ networks:
         ipam:
             config:
                 - subnet: 10.150.0.0/24
-                  gateway: 10.150.0.1
+#                  gateway: 10.150.0.1
         name: seed-as150-net           
 
     #### as151 ################################################################
@@ -125,6 +125,6 @@ networks:
         ipam:
             config:
                 - subnet: 10.151.0.0/24
-                  gateway: 10.151.0.1
+#                  gateway: 10.151.0.1
         name: seed-as151-net           
                   
