@@ -23,7 +23,7 @@ jobs:
       - name: "Start containers"
         run: |
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml up --build -d
-          sleep 10
+          sleep 8
 
       - name: "Show logs"
         run: |

@@ -79,16 +79,16 @@ services:
 
     #### IX  ############################################################
 
-    ix100_rs:
-        build: 
-            context: ./ix100
-            args:
-                BIRD_CONF: ix100_rs_bird.conf
-        image: ix100-rs
-        container_name: ix100-rs-10.100.0.100
-        networks:
-            ix100-net:
-                ipv4_address: 10.100.0.100
+#    ix100_rs:
+#        build: 
+#            context: ./ix100
+#            args:
+#                BIRD_CONF: ix100_rs_bird.conf
+#        image: ix100-rs
+#        container_name: ix100-rs-10.100.0.100
+#        networks:
+#            ix100-net:
+#                ipv4_address: 10.100.0.100
 
                 
 networks:
