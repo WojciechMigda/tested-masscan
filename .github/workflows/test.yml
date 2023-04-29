@@ -36,6 +36,10 @@ jobs:
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as150_router
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as151_router
 
+      - name: "Inspect ps"
+        run: |
+          docker ps || true
+
       - name: "Inspect networks"
         run: |
           docker network inspect seed-ix100-net || true
