@@ -68,6 +68,45 @@ services:
         ipv4_address: 10.9.0.5
         ipv6_address: 2480:db8:1:9::5
 
+  snmpd-lan-161:
+    hostname: snmpd-lan-161
+    container_name: snmpd-lan-161
+    extends:
+      file: compose-templates.yml
+      service: snmpd-template
+    volumes:
+      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf:ro
+    networks:
+      net-lan:
+        ipv4_address: 10.9.0.161
+        ipv6_address: 2480:db8:1:9::00a1
+
+  snmpd-lan-163:
+    hostname: snmpd-lan-163
+    container_name: snmpd-lan-163
+    extends:
+      file: compose-templates.yml
+      service: snmpd-template
+    volumes:
+      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf:ro
+    networks:
+      net-lan:
+        ipv4_address: 10.9.0.163
+        ipv6_address: 2480:db8:1:9::00a3
+
+  snmpd-lan-165:
+    hostname: snmpd-lan-165
+    container_name: snmpd-lan-165
+    extends:
+      file: compose-templates.yml
+      service: snmpd-template
+    volumes:
+      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf:ro
+    networks:
+      net-lan:
+        ipv4_address: 10.9.0.165
+        ipv6_address: 2480:db8:1:9::00a5
+
   snmpd-wan-sanity:
     hostname: snmpd-wan-sanity
     container_name: snmpd-wan-sanity

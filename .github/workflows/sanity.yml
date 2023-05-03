@@ -154,6 +154,14 @@ jobs:
                -vvv \
                --range 2480:db8:1:7::5
 
+          docker exec workbench /masscan/bin/masscan \
+              -pU:161 \
+              --wait 2 \
+              --snmp-v1 --snmp-v2c --snmp-v3 \
+              --banners \
+              -vvv \
+              --range 2480:db8:1:9::00a1
+
 
       - name: "Show logs"
         run: |
