@@ -7,9 +7,9 @@ services:
       service: router-template
     container_name: as9-router
     volumes:
-      - ./bird/as9-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf
-      - ./bird/as9-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf
-      - ./radvd/radvd.conf:/etc/radvd/radvd.custom.conf
+      - ./bird/as9-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf:ro
+      - ./bird/as9-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf:ro
+      - ./radvd/radvd.conf:/etc/radvd/radvd.custom.conf:ro
     networks:
       net-ix:
         ipv4_address: 10.100.0.9
@@ -24,9 +24,9 @@ services:
       service: router-template
     container_name: as7-router
     volumes:
-      - ./bird/as7-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf
-      - ./bird/as7-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf
-      - ./radvd/radvd.conf:/etc/radvd/radvd.custom.conf
+      - ./bird/as7-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf:ro
+      - ./bird/as7-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf:ro
+      - ./radvd/radvd.conf:/etc/radvd/radvd.custom.conf:ro
     networks:
       net-ix:
         ipv4_address: 10.100.0.7
@@ -44,7 +44,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ../../masscan:/masscan
+      - ../../masscan:/masscan:ro
     tty: true
     networks:
       net-lan:
@@ -64,7 +64,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf
+      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf:ro
     expose:
       - "161"
     tty: true
@@ -86,7 +86,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf
+      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf:ro
     expose:
       - "161"
     tty: true
