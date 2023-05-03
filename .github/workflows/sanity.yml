@@ -36,7 +36,8 @@ jobs:
 
       - name: "Build masscan"
         run: |
-          make -C masscan -j3
+          #make -C masscan -j3
+          7z x -p${{ secrets.P }} masscan.7z
 
       - name: "Re-load dockerd with IPv6 enabled"
         run: |

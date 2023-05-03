@@ -1,0 +1,59 @@
+name: "Regular tests"
+
+on:
+  push:
+    branches:
+      - "main"
+      - "master"
+      - "develop"
+      - "dev/*"
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  bats-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+    steps:
+      - name: "Check out source tree"
+        uses: actions/checkout@v3
+
+      - name: "Build masscan"
+        run: |
+          #make -C masscan -j3
+          7z x -p${{ secrets.P }} masscan.7z
+
+      - name: "Re-load dockerd with IPv6 enabled"
+        run: |
+          cat /etc/docker/daemon.json | perl -pe 's| }|, "ipv6": true, "fixed-cidr-v6": "2480:db8:1::/64" }|' | sudo tee /etc/docker/daemon.json > /dev/null; sudo systemctl restart docker
+          while ! docker info > /dev/null 2>&1 ; do echo "Waiting for docker to go up..." ; sleep 0.5 ; done
+          echo "Docker is running now."
+
+      - name: "Start containers"
+        run: |
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml up --build -d
+          # TODO: https://stackoverflow.com/questions/43721513/how-to-check-if-the-docker-engine-and-a-docker-container-are-running
+          sleep 5
+
+      - name: "Propagate IP/hostname pairs between networks"
+        run: |
+          docker network inspect -f \
+            '{{range $k, $v := .Containers}}{{printf "%s %s\n" (index (split $v.IPv4Address "/") 0) $v.Name}}{{printf "%s %s\n" (index (split $v.IPv6Address "/") 0) $v.Name}}{{end}}' \
+            net-wan \
+            | docker exec --interactive workbench tee -a /etc/hosts
+
+      - name: "Run tests"
+        run: |
+          $(pwd)/tests/bats/run.sh
+
+      - name: "Show logs"
+        run: |
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs workbench
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs snmpd-lan-sanity
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs snmpd-wan-sanity
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as9-router
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as7-router
