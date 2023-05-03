@@ -14,3 +14,15 @@ services:
       - net.ipv4.ip_forward=1
     cap_add:
       - ALL
+
+  snmpd-template:
+    build:
+      context: ./target-containers
+    env_file:
+      - .env
+    image: image-target
+    tty: true
+    command: >-
+      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+    cap_add:
+      - NET_ADMIN

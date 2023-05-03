@@ -3,10 +3,10 @@ version: "3"
 services:
   as9-router:
     hostname: as9-router
+    container_name: as9-router
     extends:
       file: compose-templates.yml
       service: router-template
-    container_name: as9-router
     volumes:
       - ./bird/as9-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf:ro
       - ./bird/as9-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf:ro
@@ -21,10 +21,10 @@ services:
 
   as7-router:
     hostname: as7-router
+    container_name: as7-router
     extends:
       file: compose-templates.yml
       service: router-template
-    container_name: as7-router
     volumes:
       - ./bird/as7-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf:ro
       - ./bird/as7-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf:ro
@@ -39,9 +39,9 @@ services:
 
   workbench:
     hostname: workbench
+    container_name: workbench
     build:
       context: ./host-containers
-    container_name: workbench
     image: image-host
     env_file:
       - .env
@@ -57,47 +57,29 @@ services:
 
   snmpd-lan-sanity:
     hostname: snmpd-lan-sanity
-    build:
-      context: ./target-containers
     container_name: snmpd-lan-sanity
-    image: image-target
-    command: >-
-      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
-    env_file:
-      - .env
+    extends:
+      file: compose-templates.yml
+      service: snmpd-template
     volumes:
       - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf:ro
-    expose:
-      - "161"
-    tty: true
     networks:
       net-lan:
         ipv4_address: 10.9.0.5
         ipv6_address: 2480:db8:1:9::5
-    cap_add:
-      - NET_ADMIN
 
   snmpd-wan-sanity:
     hostname: snmpd-wan-sanity
-    build:
-      context: ./target-containers
     container_name: snmpd-wan-sanity
-    image: image-target
-    command: >-
-      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
-    env_file:
-      - .env
+    extends:
+      file: compose-templates.yml
+      service: snmpd-template
     volumes:
       - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf:ro
-    expose:
-      - "161"
-    tty: true
     networks:
       net-wan:
         ipv4_address: 10.7.0.5
         ipv6_address: 2480:db8:1:7::5
-    cap_add:
-      - NET_ADMIN
 
 networks:
   net-lan:
