@@ -1,0 +1,189 @@
+name: "Sanity tests"
+
+on:
+  push:
+    branches:
+      - "main"
+      - "master"
+      - "develop"
+      - "dev/*"
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: "Enable extra diagnostic steps."
+        # https://github.blog/changelog/2021-11-10-github-actions-input-types-for-manual-workflows/
+        type: boolean
+        default: false
+        required: true
+      run-nmap:
+        description: "Run nmap scan."
+        type: boolean
+        default: false
+        required: true
+  pull_request:
+
+jobs:
+  sanity-scans:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+    steps:
+      - name: "Check out source tree"
+        uses: actions/checkout@v3
+
+      - name: "Build masscan"
+        run: |
+          make -C masscan -j3
+
+      - name: "Re-load dockerd with IPv6 enabled"
+        run: |
+          cat /etc/docker/daemon.json | perl -pe 's| }|, "ipv6": true, "fixed-cidr-v6": "2480:db8:1::/64" }|' | sudo tee /etc/docker/daemon.json > /dev/null; sudo systemctl restart docker
+          while ! docker info > /dev/null 2>&1 ; do echo "Waiting for docker to go up..." ; sleep 0.5 ; done
+          echo "Docker is running now."
+
+      - name: "Start containers"
+        run: |
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml up --build -d
+          # TODO: https://stackoverflow.com/questions/43721513/how-to-check-if-the-docker-engine-and-a-docker-container-are-running
+          sleep 5
+
+      - name: "Show docker ps"
+        run: |
+          docker ps
+
+      - name: "Propagate IPs between networks"
+        run: |
+          docker network inspect -f \
+            '{{range $k, $v := .Containers}}{{printf "%s %s\n" (index (split $v.IPv4Address "/") 0) $v.Name}}{{printf "%s %s\n" (index (split $v.IPv6Address "/") 0) $v.Name}}{{end}}' \
+            net-wan \
+            | docker exec --interactive workbench tee -a /etc/hosts
+          docker network inspect -f \
+            '{{range $k, $v := .Containers}}{{printf "%s %s\n" (index (split $v.IPv4Address "/") 0) $v.Name}}{{printf "%s %s\n" (index (split $v.IPv6Address "/") 0) $v.Name}}{{end}}' \
+            net-lan \
+            | docker exec --interactive snmpd-wan-sanity tee -a /etc/hosts
+
+      - name: "Modify default route on workbench"
+        run: |
+          #docker exec workbench apt-get update
+          #docker exec workbench apt-get install -y iproute2 net-tools iputils-ping mtr-tiny dnsutils gawk
+          #docker exec workbench apt-get install -y nmap
+          docker exec workbench ping -4 -c 2 as9-router
+          docker exec workbench ping -6 -c 2 as9-router
+          #docker exec workbench bash -c 'ip -4 route change default via $(dig -4 +short as9-router) dev eth0' || true
+          #docker exec workbench ip -6 route del default via 2480:db8:1:9::1 || true
+          ## IP resolving (getent, host, nslookup, dig) https://unix.stackexchange.com/a/20793/149934
+          ## getent by default always will return ipv6 first
+          #docker exec workbench bash -c 'ip -6 route add default via $(getent hosts as9-router | awk "{ print \$1 ; exit }") metric 1024' || true
+          docker exec workbench route -4n
+          docker exec workbench route -6n
+
+      - name: "Inspect router as9-router"
+        run: |
+          docker exec as9-router ifconfig
+          docker exec as9-router route -4n
+          docker exec as9-router route -6n
+          docker exec as9-router ping -4 -c 2 snmpd-lan-sanity || true
+        if: ${{ inputs.verbose == true }}
+
+      - name: "Inspect router as7-router"
+        run: |
+          docker exec as7-router ifconfig
+          docker exec as7-router route -4n
+          docker exec as7-router route -6n
+          docker exec as7-router ping -4 -c 2 snmpd-wan-sanity || true
+        if: ${{ inputs.verbose == true }}
+
+      - name: "Modify default route on snmpd-wan-sanity"
+        run: |
+          docker exec --privileged=true snmpd-wan-sanity yum install -y iproute net-tools iputils mtr bind-utils gawk
+          docker exec snmpd-wan-sanity ping -4 -c 2 as7-router
+          docker exec snmpd-wan-sanity ping -6 -c 2 as7-router
+          docker exec snmpd-wan-sanity bash -c 'ip -4 route change default via $(dig -4 +short as7-router) dev eth0' || true
+          docker exec snmpd-wan-sanity ip -6 route del default via 2480:db8:1:7::1 || true
+          docker exec snmpd-wan-sanity bash -c 'ip -6 route add default via $(getent hosts as7-router | awk "{ print \$1 ; exit }") metric 1024' || true
+          docker exec snmpd-wan-sanity route -4n
+          docker exec snmpd-wan-sanity route -6n
+
+      - name: "Inspect snmpd-wan-sanity"
+        run: |
+          docker exec snmpd-wan-sanity ifconfig
+          docker exec snmpd-wan-sanity route -4n
+          docker exec snmpd-wan-sanity route -6n
+          docker exec snmpd-wan-sanity ip -4 route
+          docker exec snmpd-wan-sanity ip -6 route
+          docker exec snmpd-wan-sanity ping -4 -c 2 as7-router
+          docker exec snmpd-wan-sanity ping -4 -c 2 workbench
+          docker exec snmpd-wan-sanity ping -6 -c 2 workbench
+          docker exec snmpd-wan-sanity mtr -4 -c 1 -r -n workbench
+          docker exec snmpd-wan-sanity mtr -6 -c 1 -r -n workbench
+        if: ${{ inputs.verbose == true }}
+
+      - name: "Inspect workbench"
+        run: |
+          docker exec workbench ifconfig
+          docker exec workbench route -4n
+          docker exec workbench route -6n
+          docker exec workbench ip -4 route
+          docker exec workbench ip -6 route
+          docker exec workbench ping -4 -c 2 as9-router
+          docker exec workbench ping -4 -c 2 snmpd-lan-sanity
+          docker exec workbench ping -4 -c 2 snmpd-wan-sanity
+          docker exec workbench ping -6 -c 2 snmpd-lan-sanity
+          docker exec workbench ping -6 -c 2 snmpd-wan-sanity
+          docker exec workbench ip -4 neigh
+          docker exec workbench ip -6 neigh
+          docker exec workbench mtr -4 -c 1 -r -n snmpd-wan-sanity || true
+          docker exec workbench mtr -6 -c 1 -r -n snmpd-wan-sanity || true
+        if: ${{ inputs.verbose == true }}
+
+      - name: "Sanity nmap scan"
+        run: |
+          docker exec workbench nmap --iflist
+          docker exec workbench nmap -sU -p 161 --disable-arp-ping -n --reason -vv 10.9.0.5 --packet-trace -d --traceroute -Pn
+          docker exec workbench nmap -sU -p 161 --disable-arp-ping -n --reason -vv -6 2480:db8:1:9::5 --packet-trace -d --traceroute -Pn
+          docker exec workbench nmap -sU -p 161 --disable-arp-ping -n --reason -vv 10.7.0.5 --packet-trace -d --traceroute -Pn
+          docker exec workbench nmap -sU -p 161 --disable-arp-ping -n --reason -vv -6 2480:db8:1:7::5 --packet-trace -d --traceroute -Pn
+        if: ${{ inputs.run-nmap == true }}
+
+      - name: "Sanity masscan scan"
+        run: |
+          docker exec workbench /masscan/bin/masscan -pU:161 \
+               --banners \
+               --rate 400 \
+               --wait 2 \
+               -vvv \
+               10.9.0.5
+          docker exec workbench /masscan/bin/masscan -pU:161 \
+               --snmp-v3 --snmp-v1 \
+               --banners \
+               --rate 400 \
+               --wait 2 \
+               --lan-arp-shotgun-scan --lan-arp-shotgun-scan-wait 2 --lan-arp-shotgun-scan-rate 30 \
+               -vvv \
+               --range 2480:db8:1:9::5
+          docker exec workbench /masscan/bin/masscan -pU:161 \
+               --banners \
+               --rate 400 \
+               --wait 2 \
+               -vvv \
+               10.7.0.5
+          docker exec workbench /masscan/bin/masscan -pU:161 \
+               --snmp-v3 --snmp-v1 \
+               --banners \
+               --rate 400 \
+               --wait 2 \
+               --lan-arp-shotgun-scan --lan-arp-shotgun-scan-wait 2 --lan-arp-shotgun-scan-rate 30 \
+               -vvv \
+               --range 2480:db8:1:7::5
+
+
+      - name: "Show logs"
+        run: |
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs workbench
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs snmpd-lan-sanity
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs snmpd-wan-sanity
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as9-router
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as7-router

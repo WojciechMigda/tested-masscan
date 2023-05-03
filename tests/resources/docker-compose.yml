@@ -1,50 +1,115 @@
 version: "3"
 
 services:
-  snmpd-01:
-    container_name: snmpd-01
-    image: polinux/snmpd
-    command: >-
-      -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+  as9-router:
+    extends:
+      file: compose-templates.yml
+      service: router-template
+    container_name: as9-router
     volumes:
-      - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
-#    sysctls:
-#      net.ipv4.ping_group_range: "0 429496729"
-    ports:
-      - "11161:161/udp"
+      - ./bird/as9-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf
+      - ./bird/as9-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf
+      - ./radvd/radvd.conf:/etc/radvd/radvd.custom.conf
+    networks:
+      net-ix:
+        ipv4_address: 10.100.0.9
+        ipv6_address: 2480:db8:1:0064::9
+      net-lan:
+        ipv4_address: ${AS9_ROUTER_IPv4}
+        ipv6_address: ${AS9_ROUTER_IPv6}
+
+  as7-router:
+    extends:
+      file: compose-templates.yml
+      service: router-template
+    container_name: as7-router
+    volumes:
+      - ./bird/as7-bird-ipv4.conf:/etc/bird/bird-ipv4.custom.conf
+      - ./bird/as7-bird-ipv6.conf:/etc/bird/bird-ipv6.custom.conf
+      - ./radvd/radvd.conf:/etc/radvd/radvd.custom.conf
+    networks:
+      net-ix:
+        ipv4_address: 10.100.0.7
+        ipv6_address: 2480:db8:1:0064::7
+      net-wan:
+        ipv4_address: ${AS7_ROUTER_IPv4}
+        ipv6_address: ${AS7_ROUTER_IPv6}
+
+  workbench:
+    hostname: workbench
+    build:
+      context: ./host-containers
+    container_name: workbench
+    image: image-host
+    env_file:
+      - .env
+    volumes:
+      - ../../masscan:/masscan
     tty: true
     networks:
-      net-snmpd:
+      net-lan:
+        ipv4_address: 10.9.0.71
+        ipv6_address: 2480:db8:1:9::0047
+    cap_add: # needed for masscan
+      - ALL
+
+  snmpd-lan-sanity:
+    hostname: snmpd-lan-sanity
+    container_name: snmpd-lan-sanity
+    image: polinux/snmpd
+    command: >-
+      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+    volumes:
+      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf
+    expose:
+      - "161"
+    tty: true
+    networks:
+      net-lan:
         ipv4_address: 10.9.0.5
-        ipv6_address: 2001:db8:1:1::5
+        ipv6_address: 2480:db8:1:9::5
     cap_add:
       - NET_ADMIN
 
-  snmpd-02:
-    container_name: snmpd-02
+  snmpd-wan-sanity:
+    hostname: snmpd-wan-sanity
+    container_name: snmpd-wan-sanity
     image: polinux/snmpd
     command: >-
-      -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+      -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
     volumes:
-      - ./snmpd.conf:/etc/snmpd/snmpd.custom.conf
-    ports:
-      - "12161:161/udp"
+      - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf
+    expose:
+      - "161"
     tty: true
     networks:
-      net-snmpd:
-        ipv4_address: 10.9.0.6
-        ipv6_address: 2001:db8:1:1::6
+      net-wan:
+        ipv4_address: 10.7.0.5
+        ipv6_address: 2480:db8:1:7::5
     cap_add:
       - NET_ADMIN
 
 networks:
-  net-snmpd:
-    name: net-snmpd
-    driver_opts:
-      com.docker.network.bridge.name: br-snmpd
+  net-lan:
+    name: net-lan
     enable_ipv6: true
     ipam:
       config:
         - subnet: 10.9.0.0/24
-          gateway: 10.9.0.1
-        - subnet: 2001:db8:1:1::/120
+        - subnet: 2480:db8:1:9::/120
+
+  net-wan:
+    name: net-wan
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 10.7.0.0/24
+        - subnet: 2480:db8:1:7::/120
+
+  net-ix:
+    name: net-ix
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 10.100.0.0/24
+        - subnet: 2480:db8:1:0064::/120
