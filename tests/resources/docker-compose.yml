@@ -55,10 +55,14 @@ services:
 
   snmpd-lan-sanity:
     hostname: snmpd-lan-sanity
+    build:
+      context: ./target-containers
     container_name: snmpd-lan-sanity
-    image: polinux/snmpd
+    image: image-target
     command: >-
       -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+    env_file:
+      - .env
     volumes:
       - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf
     expose:
@@ -73,10 +77,14 @@ services:
 
   snmpd-wan-sanity:
     hostname: snmpd-wan-sanity
+    build:
+      context: ./target-containers
     container_name: snmpd-wan-sanity
-    image: polinux/snmpd
+    image: image-target
     command: >-
       -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
+    env_file:
+      - .env
     volumes:
       - ./snmpd/snmpd.conf:/etc/snmpd/snmpd.custom.conf
     expose:

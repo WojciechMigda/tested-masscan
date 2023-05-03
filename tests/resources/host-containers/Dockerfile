@@ -3,9 +3,13 @@ FROM ubuntu:22.04
 ARG AS9_ROUTER_IPv4
 ARG AS9_ROUTER_IPv6
 
-RUN apt-get update && apt-get -y install iproute2 net-tools iputils-ping mtr-tiny nmap
+RUN \
+    apt-get update && \
+    apt-get -y install iproute2 net-tools iputils-ping mtr-tiny nmap && \
+    apt-get clean
 
-CMD echo "Switching to ipv4 router ${AS9_ROUTER_IPv4}" ; \
+CMD \
+    echo "Switching to ipv4 router ${AS9_ROUTER_IPv4}" ; \
     route -4n ; \
     ip -4 route change default via ${AS9_ROUTER_IPv4} dev eth0 ; \
     echo "Switching to ipv6 router ${AS9_ROUTER_IPv6}" ; \
