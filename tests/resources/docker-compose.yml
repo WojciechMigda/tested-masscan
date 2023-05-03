@@ -2,6 +2,7 @@ version: "3"
 
 services:
   as9-router:
+    hostname: as9-router
     extends:
       file: compose-templates.yml
       service: router-template
@@ -19,6 +20,7 @@ services:
         ipv6_address: ${AS9_ROUTER_IPv6}
 
   as7-router:
+    hostname: as7-router
     extends:
       file: compose-templates.yml
       service: router-template
