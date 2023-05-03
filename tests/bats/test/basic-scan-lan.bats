@@ -14,15 +14,12 @@ setup_file() {
 setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
+    load 'test_helper/common-masscan'
 }
 
 #teardown() {
 #    echo
 #}
-
-masscan() {
-    docker exec workbench /masscan/bin/masscan $@
-}
 
 # bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv4 lan
 @test "Can scan single default LAN IPv4 target for snmp v1, v2c, and v3" {
