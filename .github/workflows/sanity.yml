@@ -162,6 +162,14 @@ jobs:
               -vvv \
               --range 2480:db8:1:9::00a1
 
+          docker exec snmpd-lan-sanity netstat -tulpn || true
+          docker exec as9-router netstat -tulpn || true
+          docker exec workbench /masscan/bin/masscan \
+              -p22,23,135,137,1433,1521,3389,5985,179,199 \
+              --wait 2 \
+              --banners \
+              -vvv \
+              10.9.0.5 10.9.0.254
 
       - name: "Show logs"
         run: |
