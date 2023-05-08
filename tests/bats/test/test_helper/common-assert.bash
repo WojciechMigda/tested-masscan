@@ -83,8 +83,8 @@ assert_line_count() {
 
   if [[ $n_lines != $_count ]]; then
     batslib_print_kv_single_or_multi 8 \
-    'expected' "$n_lines" \
-    'actual'   "$_count" \
+    'expected' "$_count" \
+    'actual'   "$n_lines" \
     | batslib_decorate 'line counts do not equal' \
     | fail
   fi

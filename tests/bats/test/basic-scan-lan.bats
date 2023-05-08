@@ -15,6 +15,7 @@ setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
     load 'test_helper/common-masscan'
+    load 'test_helper/common-assert'
 }
 
 #teardown() {
@@ -34,6 +35,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.161"
 }
 
 
@@ -50,10 +52,12 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.161"
 
     assert_output --partial "Banner on port 161/udp on 10.9.0.163: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.163: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.163: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.163"
 }
 
 # bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv4 lan
@@ -69,14 +73,17 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.161"
 
     assert_output --partial "Banner on port 161/udp on 10.9.0.163: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.163: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.163: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.163"
 
     assert_output --partial "Banner on port 161/udp on 10.9.0.165: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.165: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 10.9.0.165: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.165"
 }
 
 # bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv6 lan
@@ -92,6 +99,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 2480:db8:1:9::a1"
 }
 
 
@@ -108,10 +116,12 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 2480:db8:1:9::a1"
 
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 2480:db8:1:9::a3"
 }
 
 # bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv6 lan
@@ -127,12 +137,15 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 2480:db8:1:9::a1"
 
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 2480:db8:1:9::a3"
 
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a5: [snmp] [v1]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a5: [snmp] [v2c]"
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a5: [snmp] [v3]"
+    assert_line_count --partial 3 "Discovered open port 161/udp on 2480:db8:1:9::a5"
 }

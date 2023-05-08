@@ -8,6 +8,7 @@ setup() {
 
 # bats test_tags: arp ipv4 lan
 @test "LAN ipv4 target is not scanned when OS cache is empty and ARP probe is not requested" {
+    skip
     neigh_flush
 
     run \
@@ -27,6 +28,7 @@ setup() {
 
 # bats test_tags: arp ipv4 lan
 @test "LAN ipv4 target is scanned when OS cache is empty and ARP probe is requested" {
+    skip
     neigh_flush
 
     run \

@@ -1,9 +1,9 @@
 #!/bin/bash
 
+set -euo pipefail
+
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# parallel execution causes unsolicited packets
-#$script_dir/bats-core/bin/bats --filter-tags !parallel:off -j `nproc` $script_dir/test/
-#$script_dir/bats-core/bin/bats --filter-tags parallel:off $script_dir/test/
-
-$script_dir/bats-core/bin/bats $script_dir/test/
+# WARNING: parallel execution of scan scenarios causes unsolicited packets
+$script_dir/bats-core/bin/bats --filter-tags !parallel:on $script_dir/test/
+$script_dir/bats-core/bin/bats --filter-tags parallel:on -j `nproc` $script_dir/test/
