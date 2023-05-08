@@ -9,6 +9,6 @@ RUN \
     yum install -y iproute net-tools iputils mtr && \
     yum clean all
 
-COPY wrapped-bootstrap.sh /
+COPY wrapped-snmpd-bootstrap.sh /
 
-ENTRYPOINT ["/wrapped-bootstrap.sh"]
+ENTRYPOINT ["/wrapped-snmpd-bootstrap.sh"]
