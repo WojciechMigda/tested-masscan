@@ -68,6 +68,21 @@ services:
         ipv4_address: 10.9.0.5
         ipv6_address: 2480:db8:1:9::5
 
+  tcp-lan-81:
+    hostname: tcp-lan-81
+    container_name: tcp-lan-81
+    build:
+      context: ./target-containers
+      dockerfile: Dockerfile.tcp
+    env_file:
+      - .env
+    networks:
+      net-lan:
+        ipv4_address: 10.9.0.81
+        ipv6_address: 2480:db8:1:9::0051
+    cap_add: # needed for netcat
+      - ALL
+
   snmpd-lan-161:
     hostname: snmpd-lan-161
     container_name: snmpd-lan-161

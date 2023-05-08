@@ -169,7 +169,16 @@ jobs:
               --wait 2 \
               --banners \
               -vvv \
-              10.9.0.5 10.9.0.254
+              --packet-trace \
+              10.9.0.5 10.9.0.254 10.9.0.81 --range 2480:db8:1:9::0051
+
+          docker exec workbench /masscan/bin/masscan \
+              -p22,23,135,137,1433,1521,3389,5985,179,199 \
+              --wait 2 \
+              --banners \
+              -vvv \
+              --packet-trace \
+              --range 2480:db8:1:9::0051
 
       - name: "Show logs"
         run: |
@@ -178,3 +187,4 @@ jobs:
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs snmpd-wan-sanity
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as9-router
           docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs as7-router
+          docker-compose -f $(pwd)/tests/resources/docker-compose.yml logs tcp-lan-81

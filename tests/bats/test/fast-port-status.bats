@@ -26,6 +26,21 @@ setup() {
     assert_line_count --partial 1 "Discovered open port 161/udp on 10.9.0.161"
 }
 
+# bats test_tags: lan, ipv4
+@test "LAN IPv4 target scan for multiple TCP ports skips remaining probes after first success" {
+    run \
+      masscan \
+        -p22,23,135,137,1433,1521,3389,5985,179,199 \
+        --wait 2 \
+        --rate 1 \
+        --banners \
+        -vvv \
+        --fast-port-status \
+        10.9.0.81
+
+    assert_line_count --regexp 1 "Discovered open port [[:digit:]]+/tcp on 10.9.0.81"
+}
+
 # bats test_tags: lan, ipv6
 @test "LAN IPv6 target scan for 3 snmp versions skips remaining probes after first success" {
     run \
@@ -43,6 +58,20 @@ setup() {
     assert_line_count --partial 1 "Discovered open port 161/udp on 2480:db8:1:9::a1"
 }
 
+# bats test_tags: lan, ipv6
+@test "LAN IPv6 target scan for multiple TCP ports skips remaining probes after first success" {
+    run \
+      masscan \
+        -p22,23,135,137,1433,1521,3389,5985,179,199 \
+        --wait 2 \
+        --rate 1 \
+        --banners \
+        -vvv \
+        --fast-port-status \
+        --range 2480:db8:1:9::0051
+
+    assert_line_count --regexp 1 "Discovered open port [[:digit:]]+/tcp on 2480:db8:1:9::51"
+}
 # bats test_tags: wan, ipv4
 @test "WAN IPv4 target scan for 3 snmp versions skips remaining probes after first success" {
     run \

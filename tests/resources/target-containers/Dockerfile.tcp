@@ -1,0 +1,13 @@
+FROM ubuntu:23.04
+
+ARG AS9_ROUTER_IPv4
+ARG AS9_ROUTER_IPv6
+
+RUN \
+    apt-get update && \
+    apt-get -y install iproute2 net-tools iputils-ping mtr-tiny netcat-openbsd && \
+    apt-get clean
+
+COPY tcp-bootstrap.sh /
+
+ENTRYPOINT ["/tcp-bootstrap.sh"]
