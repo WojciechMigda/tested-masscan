@@ -24,7 +24,7 @@ setup() {
         10.9.0.161
 
     assert_line_count --partial 1 "Banner on port 161/udp on 10.9.0.161: [snmp]"
-    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 10.9.0.161"
+    assert_line_count --regexp 1 "Discovered (open|closed) port 161/udp on 10.9.0.161"
 }
 
 # bats test_tags: lan, ipv4
@@ -58,7 +58,7 @@ setup() {
         --range 2480:db8:1:9::00a1
 
     assert_line_count --partial 1 "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp]"
-    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 2480:db8:1:9::a1"
+    assert_line_count --regexp 1 "Discovered (open|closed) port 161/udp on 2480:db8:1:9::a1"
 }
 
 # bats test_tags: lan, ipv6
@@ -91,7 +91,7 @@ setup() {
         10.7.0.161
 
     assert_line_count --partial 1 "Banner on port 161/udp on 10.7.0.161: [snmp]"
-    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 10.7.0.161"
+    assert_line_count --regexp 1 "Discovered (open|closed) port 161/udp on 10.7.0.161"
 }
 
 # bats test_tags: wan, ipv6
@@ -109,5 +109,5 @@ setup() {
         --range 2480:db8:1:7::00a1
 
     assert_line_count --partial 1 "Banner on port 161/udp on 2480:db8:1:7::a1: [snmp]"
-    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 2480:db8:1:7::a1"
+    assert_line_count --regexp 1 "Discovered (open|closed) port 161/udp on 2480:db8:1:7::a1"
 }
