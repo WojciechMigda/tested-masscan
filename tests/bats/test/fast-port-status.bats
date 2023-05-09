@@ -19,11 +19,12 @@ setup() {
         --snmp-v1 --snmp-v2c --snmp-v3 \
         --banners \
         -vvv \
+        --output-show all \
         --fast-port-status \
         10.9.0.161
 
     assert_line_count --partial 1 "Banner on port 161/udp on 10.9.0.161: [snmp]"
-    assert_line_count --partial 1 "Discovered open port 161/udp on 10.9.0.161"
+    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 10.9.0.161"
 }
 
 # bats test_tags: lan, ipv4
@@ -35,10 +36,11 @@ setup() {
         --rate 1 \
         --banners \
         -vvv \
+        --output-show all \
         --fast-port-status \
         10.9.0.81
 
-    assert_line_count --regexp 1 "Discovered open port [[:digit:]]+/tcp on 10.9.0.81"
+    assert_line_count --regexp 1 "Discovered (open|closed) port [[:digit:]]+/tcp on 10.9.0.81"
 }
 
 # bats test_tags: lan, ipv6
@@ -51,11 +53,12 @@ setup() {
         --snmp-v1 --snmp-v2c --snmp-v3 \
         --banners \
         -vvv \
+        --output-show all \
         --fast-port-status \
         --range 2480:db8:1:9::00a1
 
     assert_line_count --partial 1 "Banner on port 161/udp on 2480:db8:1:9::a1: [snmp]"
-    assert_line_count --partial 1 "Discovered open port 161/udp on 2480:db8:1:9::a1"
+    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 2480:db8:1:9::a1"
 }
 
 # bats test_tags: lan, ipv6
@@ -67,10 +70,11 @@ setup() {
         --rate 1 \
         --banners \
         -vvv \
+        --output-show all \
         --fast-port-status \
         --range 2480:db8:1:9::0051
 
-    assert_line_count --regexp 1 "Discovered open port [[:digit:]]+/tcp on 2480:db8:1:9::51"
+    assert_line_count --regexp 1 "Discovered (open|closed) port [[:digit:]]+/tcp on 2480:db8:1:9::51"
 }
 # bats test_tags: wan, ipv4
 @test "WAN IPv4 target scan for 3 snmp versions skips remaining probes after first success" {
@@ -82,11 +86,12 @@ setup() {
         --snmp-v1 --snmp-v2c --snmp-v3 \
         --banners \
         -vvv \
+        --output-show all \
         --fast-port-status \
         10.7.0.161
 
     assert_line_count --partial 1 "Banner on port 161/udp on 10.7.0.161: [snmp]"
-    assert_line_count --partial 1 "Discovered open port 161/udp on 10.7.0.161"
+    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 10.7.0.161"
 }
 
 # bats test_tags: wan, ipv6
@@ -99,9 +104,10 @@ setup() {
         --snmp-v1 --snmp-v2c --snmp-v3 \
         --banners \
         -vvv \
+        --output-show all \
         --fast-port-status \
         --range 2480:db8:1:7::00a1
 
     assert_line_count --partial 1 "Banner on port 161/udp on 2480:db8:1:7::a1: [snmp]"
-    assert_line_count --partial 1 "Discovered open port 161/udp on 2480:db8:1:7::a1"
+    assert_line_count --partial 1 "Discovered (open|closed) port 161/udp on 2480:db8:1:7::a1"
 }

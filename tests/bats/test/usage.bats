@@ -114,3 +114,33 @@ setup() {
     refute_output --partial ": empty parameter"
     assert_output --partial "fast-port-status = true"
 }
+
+@test "Usage shows '--fast-port-status-use' help entry" {
+    run -1 masscan
+
+    assert_output --partial "--fast-port-status-use <selection>:"
+}
+
+@test "Accepts '--fast-port-status-use' with empty list" {
+    run masscan --fast-port-status-use , --echo
+
+    refute_output --partial "CONF: unknown config option:"
+    refute_output --partial ": empty parameter"
+    assert_output "fast-port-status-use = udp,tcp,sctp,"
+}
+
+@test "Accepts '--fast-port-status-use' with already used selection" {
+    run masscan --fast-port-status-use sctp,udp,tcp --echo
+
+    refute_output --partial "CONF: unknown config option:"
+    refute_output --partial ": empty parameter"
+    assert_output "fast-port-status-use = udp,tcp,sctp,"
+}
+
+@test "Accepts '--fast-port-status-use' with new selection" {
+    run masscan --fast-port-status-use arp,dns,icmp --echo
+
+    refute_output --partial "CONF: unknown config option:"
+    refute_output --partial ": empty parameter"
+    assert_output "fast-port-status-use = udp,tcp,sctp,icmp,dns,arp,"
+}
