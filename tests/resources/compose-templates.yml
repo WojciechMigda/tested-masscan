@@ -21,9 +21,20 @@ services:
       dockerfile: Dockerfile.snmpd
     env_file:
       - .env
-    image: image-target
+    image: image-target-snmpd
     tty: true
-    command: >-
+    command: |
       -a -d -Lo -c /etc/snmpd/snmpd.custom.conf udp:161 udp6:161
     cap_add:
       - NET_ADMIN
+
+  tcp-template:
+    build:
+      context: ./target-containers
+      dockerfile: Dockerfile.tcp
+    env_file:
+      - .env
+    image: image-target-tcp
+    tty: true
+    cap_add: # needed for netcat
+      - ALL

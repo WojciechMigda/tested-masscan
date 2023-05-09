@@ -71,17 +71,24 @@ services:
   tcp-lan-81:
     hostname: tcp-lan-81
     container_name: tcp-lan-81
-    build:
-      context: ./target-containers
-      dockerfile: Dockerfile.tcp
-    env_file:
-      - .env
+    extends:
+      file: compose-templates.yml
+      service: tcp-template
     networks:
       net-lan:
         ipv4_address: 10.9.0.81
         ipv6_address: 2480:db8:1:9::0051
-    cap_add: # needed for netcat
-      - ALL
+
+  tcp-wan-81:
+    hostname: tcp-wan-81
+    container_name: tcp-wan-81
+    extends:
+      file: compose-templates.yml
+      service: tcp-template
+    networks:
+      net-wan:
+        ipv4_address: 10.7.0.81
+        ipv6_address: 2480:db8:1:7::0051
 
   snmpd-lan-161:
     hostname: snmpd-lan-161
