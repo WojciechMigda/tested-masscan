@@ -93,3 +93,8 @@ assert_line_count() {
 
   return 0
 }
+
+refute_bad_option_output() {
+    refute_output --partial "CONF: unknown config option:"
+    refute_output --partial ": empty parameter"
+}

@@ -15,6 +15,7 @@ setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
     load 'test_helper/common-masscan'
+    load 'test_helper/common-assert'
 }
 
 #teardown() {
@@ -33,6 +34,13 @@ setup() {
     run -1 masscan
 
     assert_output --partial "--ipv6-allow-link-local:"
+}
+
+@test "Accepts '--ipv6-allow-link-local' flag" {
+    run masscan --echo --ipv6-allow-link-local
+
+    refute_bad_option_output
+    assert_line "ipv6-allow-link-local = true"
 }
 
 @test "Usage shows '--with-lan-arp' help entry" {
@@ -114,8 +122,7 @@ setup() {
 @test "Accepts '--fast-port-status' flag" {
     run masscan --echo --fast-port-status
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status = true"
 }
 
@@ -134,32 +141,28 @@ setup() {
 @test "Accepts '--fast-port-status-use' with empty list" {
     run masscan --echo --fast-port-status --fast-port-status-use ,
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-use = udp,tcp,sctp,"
 }
 
 @test "Accepts '--fast-port-status-use' with selection already in use" {
     run masscan --echo --fast-port-status --fast-port-status-use sctp,udp,tcp
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-use = udp,tcp,sctp,"
 }
 
 @test "Accepts '--fast-port-status-use' with new selection" {
     run masscan --echo --fast-port-status-use arp,dns,icmp
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-use = udp,tcp,sctp,icmp,dns,arp,"
 }
 
 @test "Accepts '--fast-port-status-use' with 'all' selection" {
     run masscan --echo --fast-port-status-use all
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-use = udp,tcp,sctp,icmp,dns,arp,"
 }
 
@@ -179,16 +182,14 @@ setup() {
 @test "Accepts '--fast-port-status-exclude' with empty list" {
     run masscan --echo --fast-port-status --fast-port-status-exclude ,
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-exclude = "
 }
 
 @test "Accepts '--fast-port-status-exclude' with selection in use" {
     run masscan --echo --fast-port-status --fast-port-status-exclude sctp
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-use = udp,tcp,"
     assert_line "fast-port-status-exclude = sctp,"
 }
@@ -196,8 +197,7 @@ setup() {
 @test "Accepts '--fast-port-status-exclude' with selection not in use" {
     run masscan --echo --fast-port-status --fast-port-status-exclude icmp,dns,arp
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-use = udp,tcp,sctp,"
     assert_line "fast-port-status-exclude = "
 }
@@ -205,8 +205,7 @@ setup() {
 @test "Accepts combination of '--fast-port-status-use' and '--fast-port-status-exclude'" {
     run masscan --echo --fast-port-status-use arp,icmp --fast-port-status-exclude sctp,udp,icmp
 
-    refute_output --partial "CONF: unknown config option:"
-    refute_output --partial ": empty parameter"
+    refute_bad_option_output
     assert_line "fast-port-status-use = tcp,arp,"
     assert_line "fast-port-status-exclude = udp,sctp,"
 }
