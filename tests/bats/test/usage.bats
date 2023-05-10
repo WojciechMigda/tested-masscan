@@ -112,7 +112,7 @@ setup() {
 }
 
 @test "Accepts '--fast-port-status' flag" {
-    run masscan --fast-port-status --echo
+    run masscan --echo --fast-port-status
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -132,7 +132,7 @@ setup() {
 }
 
 @test "Accepts '--fast-port-status-use' with empty list" {
-    run masscan --fast-port-status --fast-port-status-use , --echo
+    run masscan --echo --fast-port-status --fast-port-status-use ,
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -140,7 +140,7 @@ setup() {
 }
 
 @test "Accepts '--fast-port-status-use' with selection already in use" {
-    run masscan --fast-port-status --fast-port-status-use sctp,udp,tcp --echo
+    run masscan --echo --fast-port-status --fast-port-status-use sctp,udp,tcp
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -148,7 +148,7 @@ setup() {
 }
 
 @test "Accepts '--fast-port-status-use' with new selection" {
-    run masscan --fast-port-status-use arp,dns,icmp --echo
+    run masscan --echo --fast-port-status-use arp,dns,icmp
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -156,7 +156,7 @@ setup() {
 }
 
 @test "Accepts '--fast-port-status-use' with 'all' selection" {
-    run masscan --fast-port-status-use all --echo
+    run masscan --echo --fast-port-status-use all
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -164,20 +164,20 @@ setup() {
 }
 
 @test "Rejects '--fast-port-status-use' with unknown selector" {
-    run -1 masscan --fast-port-status-use garbage --echo
+    run -1 masscan --echo --fast-port-status-use garbage
 
     assert_line "FAIL: unknown 'fast_port_status-use' selector: garbage"
 }
 
 @test "Rejects '--fast-port-status-exclude' with unknown selector" {
-    run -1 masscan --fast-port-status-exclude garbage --echo
+    run -1 masscan --echo --fast-port-status-exclude garbage
 
     assert_line "FAIL: unknown 'fast_port_status-exclude' selector: garbage"
 }
 
 
 @test "Accepts '--fast-port-status-exclude' with empty list" {
-    run masscan --fast-port-status --fast-port-status-exclude , --echo
+    run masscan --echo --fast-port-status --fast-port-status-exclude ,
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -185,7 +185,7 @@ setup() {
 }
 
 @test "Accepts '--fast-port-status-exclude' with selection in use" {
-    run masscan --fast-port-status --fast-port-status-exclude sctp --echo
+    run masscan --echo --fast-port-status --fast-port-status-exclude sctp
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -194,7 +194,7 @@ setup() {
 }
 
 @test "Accepts '--fast-port-status-exclude' with selection not in use" {
-    run masscan --fast-port-status --fast-port-status-exclude icmp,dns,arp --echo
+    run masscan --echo --fast-port-status --fast-port-status-exclude icmp,dns,arp
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
@@ -203,7 +203,7 @@ setup() {
 }
 
 @test "Accepts combination of '--fast-port-status-use' and '--fast-port-status-exclude'" {
-    run masscan --fast-port-status-use arp,icmp --fast-port-status-exclude sctp,udp,icmp --echo
+    run masscan --echo --fast-port-status-use arp,icmp --fast-port-status-exclude sctp,udp,icmp
 
     refute_output --partial "CONF: unknown config option:"
     refute_output --partial ": empty parameter"
