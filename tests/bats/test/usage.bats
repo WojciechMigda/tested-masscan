@@ -49,6 +49,14 @@ setup() {
     assert_output --partial "--with-lan-arp:"
 }
 
+@test "Accepts '--with-lan-arp' flag" {
+    run masscan --echo --with-lan-arp
+
+    refute_bad_option_output
+    assert_line "with-lan-arp = true"
+}
+
+
 @test "Usage shows '--lan-arp-fast-fail' help entry" {
     run -1 masscan
 
