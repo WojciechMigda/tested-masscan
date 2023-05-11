@@ -62,11 +62,11 @@ setup() {
     assert_output --partial "--lan-arp-fast-fail:"
 }
 
-@test "Accepts '--lan-arp-fast-fail
+@test "Accepts '--lan-arp-fast-fail' {
     run masscan --echo --lan-arp-fast-fail
 
     refute_bad_option_output
-    assert_line "lan-arp-fast-fail
+    assert_line "lan-arp-fast-fail = true"
 }
 
 @test "Usage shows '--lan-arp-retries' help entry" {
@@ -79,6 +79,13 @@ setup() {
     run -1 masscan
 
     assert_output --partial "--lan-arp-shotgun-scan:"
+}
+
+@test "Accepts '--lan-arp-shotgun-scan' {
+    run masscan --echo --lan-arp-shotgun-scan
+
+    refute_bad_option_output
+    assert_line "lan-arp-shotgun-scan = true"
 }
 
 @test "Usage shows '--lan-arp-shotgun-scan-wait' help entry" {
