@@ -56,11 +56,17 @@ setup() {
     assert_line "with-lan-arp = true"
 }
 
-
 @test "Usage shows '--lan-arp-fast-fail' help entry" {
     run -1 masscan
 
     assert_output --partial "--lan-arp-fast-fail:"
+}
+
+@test "Accepts '--lan-arp-fast-fail
+    run masscan --echo --lan-arp-fast-fail
+
+    refute_bad_option_output
+    assert_line "lan-arp-fast-fail
 }
 
 @test "Usage shows '--lan-arp-retries' help entry" {
