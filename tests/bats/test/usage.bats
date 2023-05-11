@@ -112,6 +112,27 @@ setup() {
     assert_output --partial "--snmp-v1:"
 }
 
+@test "Accepts '--snmp-v1' {
+    run masscan --echo --snmp-v1
+
+    refute_bad_option_output
+    assert_line "snmp-v1 = true"
+}
+
+@test "Accepts '--snmp-v2c' {
+    run masscan --echo --snmp-v2c
+
+    refute_bad_option_output
+    assert_line "snmp-v2c = true"
+}
+
+@test "Accepts '--snmp-v3' {
+    run masscan --echo --snmp-v3
+
+    refute_bad_option_output
+    assert_line "snmp-v3 = true"
+}
+
 @test "Usage shows '--snmp-v2c' help entry" {
     run -1 masscan
 
