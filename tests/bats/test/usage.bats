@@ -62,7 +62,7 @@ setup() {
     assert_output --partial "--lan-arp-fast-fail:"
 }
 
-@test "Accepts '--lan-arp-fast-fail' {
+@test "Accepts '--lan-arp-fast-fail'" {
     run masscan --echo --lan-arp-fast-fail
 
     refute_bad_option_output
@@ -75,13 +75,27 @@ setup() {
     assert_output --partial "--lan-arp-retries UINT:"
 }
 
+@test "Accepts '--lan-arp-retries' with a positive integer value" {
+    run masscan --echo --lan-arp-retries 2
+
+    refute_bad_option_output
+    assert_line "lan-arp-retries = 2"
+}
+
+@test "Rejects '--lan-arp-retries' without a value" {
+    run masscan --echo --lan-arp-retries
+
+    refute_line --partial "lan-arp-retries ="
+    assert_line --partial "lan-arp-retries: empty parameter"
+}
+
 @test "Usage shows '--lan-arp-shotgun-scan' help entry" {
     run -1 masscan
 
     assert_output --partial "--lan-arp-shotgun-scan:"
 }
 
-@test "Accepts '--lan-arp-shotgun-scan' {
+@test "Accepts '--lan-arp-shotgun-scan'" {
     run masscan --echo --lan-arp-shotgun-scan
 
     refute_bad_option_output
@@ -112,25 +126,11 @@ setup() {
     assert_output --partial "--snmp-v1:"
 }
 
-@test "Accepts '--snmp-v1' {
+@test "Accepts '--snmp-v1'" {
     run masscan --echo --snmp-v1
 
     refute_bad_option_output
     assert_line "snmp-v1 = true"
-}
-
-@test "Accepts '--snmp-v2c' {
-    run masscan --echo --snmp-v2c
-
-    refute_bad_option_output
-    assert_line "snmp-v2c = true"
-}
-
-@test "Accepts '--snmp-v3' {
-    run masscan --echo --snmp-v3
-
-    refute_bad_option_output
-    assert_line "snmp-v3 = true"
 }
 
 @test "Usage shows '--snmp-v2c' help entry" {
@@ -139,10 +139,24 @@ setup() {
     assert_output --partial "--snmp-v2c:"
 }
 
+@test "Accepts '--snmp-v2c'" {
+    run masscan --echo --snmp-v2c
+
+    refute_bad_option_output
+    assert_line "snmp-v2c = true"
+}
+
 @test "Usage shows '--snmp-v3' help entry" {
     run -1 masscan
 
     assert_output --partial "--snmp-v3:"
+}
+
+@test "Accepts '--snmp-v3'" {
+    run masscan --echo --snmp-v3
+
+    refute_bad_option_output
+    assert_line "snmp-v3 = true"
 }
 
 @test "Usage shows '--snmp-comm' help entry" {
