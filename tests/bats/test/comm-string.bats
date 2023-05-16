@@ -21,7 +21,7 @@ setup() {
 #    echo
 #}
 
-# bats test_tags: snmp-v1 ipv4 wan community
+# bats test_tags= snmp-v1, ipv4, wan, community
 @test "WAN IPv4 target scan for snmp v1 reports default community string" {
     run \
       masscan \
@@ -34,7 +34,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.7.0.161: [snmp] [v1] [c=public]"
 }
 
-# bats test_tags: snmp-v2c ipv4 wan community
+# bats test_tags= snmp-v2c, ipv4, wan, community
 @test "WAN IPv4 target scan for snmp v2c reports default community string" {
     run \
       masscan \
@@ -47,7 +47,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.7.0.161: [snmp] [v2c] [c=public]"
 }
 
-# bats test_tags: snmp-v1 ipv4 wan community
+# bats test_tags= snmp-v1, ipv4, wan, community
 @test "WAN IPv4 target scan for snmp v1 reports custom community string" {
     run \
       masscan \
@@ -61,7 +61,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.7.0.161: [snmp] [v1] [c=secret]"
 }
 
-# bats test_tags: snmp-v2c ipv4 wan community
+# bats test_tags= snmp-v2c, ipv4, wan, community
 @test "WAN IPv4 target scan for snmp v2c reports custom community string" {
     run \
       masscan \
@@ -78,7 +78,7 @@ setup() {
 
 
 
-# bats test_tags: snmp-v1 ipv6 wan community
+# bats test_tags= snmp-v1, ipv6, wan, community
 @test "WAN IPv6 target scan for snmp v1 reports default community string" {
     run \
       masscan \
@@ -91,7 +91,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:7::a3: [snmp] [v1] [c=public]"
 }
 
-# bats test_tags: snmp-v2c ipv6 wan community
+# bats test_tags= snmp-v2c, ipv6, wan, community
 @test "WAN IPv6 target scan for snmp v2c reports default community string" {
     run \
       masscan \
@@ -104,7 +104,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:7::a3: [snmp] [v2c] [c=public]"
 }
 
-# bats test_tags: snmp-v1 ipv6 wan community
+# bats test_tags= snmp-v1, ipv6, wan, community
 @test "WAN IPv6 target scan for snmp v1 reports custom community string" {
     run \
       masscan \
@@ -118,7 +118,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:7::a3: [snmp] [v1] [c=secret]"
 }
 
-# bats test_tags: snmp-v2c ipv6 wan community
+# bats test_tags= snmp-v2c, ipv6, wan, community
 @test "WAN IPv6 target scan for snmp v2c reports custom community string" {
     run \
       masscan \
@@ -135,7 +135,7 @@ setup() {
 
 
 
-# bats test_tags: snmp-v1 ipv4 lan community
+# bats test_tags= snmp-v1, ipv4, lan, community
 @test "LAN IPv4 target scan for snmp v1 reports default community string" {
     run \
       masscan \
@@ -148,7 +148,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v1] [c=public]"
 }
 
-# bats test_tags: snmp-v2c ipv4 lan community
+# bats test_tags= snmp-v2c, ipv4, lan, community
 @test "LAN IPv4 target scan for snmp v2c reports default community string" {
     run \
       masscan \
@@ -161,7 +161,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v2c] [c=public]"
 }
 
-# bats test_tags: snmp-v1 ipv4 lan community
+# bats test_tags= snmp-v1, ipv4, lan, community
 @test "LAN IPv4 target scan for snmp v1 reports custom community string" {
     run \
       masscan \
@@ -175,7 +175,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 10.9.0.161: [snmp] [v1] [c=secret]"
 }
 
-# bats test_tags: snmp-v2c ipv4 lan community
+# bats test_tags= snmp-v2c, ipv4, lan, community
 @test "LAN IPv4 target scan for snmp v2c reports custom community string" {
     run \
       masscan \
@@ -192,7 +192,7 @@ setup() {
 
 
 
-# bats test_tags: snmp-v1 ipv6 lan community
+# bats test_tags= snmp-v1, ipv6, lan, community
 @test "LAN IPv6 target scan for snmp v1 reports default community string" {
     run \
       masscan \
@@ -205,7 +205,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v1] [c=public]"
 }
 
-# bats test_tags: snmp-v2c ipv6 lan community
+# bats test_tags= snmp-v2c, ipv6, lan, community
 @test "LAN IPv6 target scan for snmp v2c reports default community string" {
     run \
       masscan \
@@ -218,7 +218,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v2c] [c=public]"
 }
 
-# bats test_tags: snmp-v1 ipv6 lan community
+# bats test_tags= snmp-v1, ipv6, lan, community
 @test "LAN IPv6 target scan for snmp v1 reports custom community string" {
     run \
       masscan \
@@ -232,7 +232,7 @@ setup() {
     assert_output --partial "Banner on port 161/udp on 2480:db8:1:9::a3: [snmp] [v1] [c=secret]"
 }
 
-# bats test_tags: snmp-v2c ipv6 lan community
+# bats test_tags= snmp-v2c, ipv6, lan, community
 @test "LAN IPv6 target scan for snmp v2c reports custom community string" {
     run \
       masscan \

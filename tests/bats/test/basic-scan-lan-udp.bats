@@ -22,7 +22,7 @@ setup() {
 #    echo
 #}
 
-# bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv4 lan
+# bats test_tags= snmp-v1, snmp-v2c, snmp-v3, ipv4, lan
 @test "Can scan single default LAN IPv4 target for snmp v1, v2c, and v3" {
     run \
       masscan \
@@ -39,7 +39,7 @@ setup() {
 }
 
 
-# bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv4 lan
+# bats test_tags= snmp-v1, snmp-v2c, snmp-v3, ipv4, lan
 @test "Can scan two default LAN IPv4 targets for snmp v1, v2c, and v3" {
     run \
       masscan \
@@ -60,7 +60,7 @@ setup() {
     assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.163"
 }
 
-# bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv4 lan
+# bats test_tags= snmp-v1, snmp-v2c, snmp-v3, ipv4, lan
 @test "Can scan range of default LAN IPv4 targets for snmp v1, v2c, and v3" {
     run \
       masscan \
@@ -86,7 +86,7 @@ setup() {
     assert_line_count --partial 3 "Discovered open port 161/udp on 10.9.0.165"
 }
 
-# bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv6 lan
+# bats test_tags= snmp-v1, snmp-v2c, snmp-v3, ipv6, lan
 @test "Can scan single default LAN IPv6 target for snmp v1, v2c, and v3" {
     run \
       masscan \
@@ -103,7 +103,7 @@ setup() {
 }
 
 
-# bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv6 lan
+# bats test_tags= snmp-v1, snmp-v2c, snmp-v3, ipv6, lan
 @test "Can scan two default LAN IPv6 targets for snmp v1, v2c, and v3" {
     run \
       masscan \
@@ -124,7 +124,7 @@ setup() {
     assert_line_count --partial 3 "Discovered open port 161/udp on 2480:db8:1:9::a3"
 }
 
-# bats test_tags: snmp-v1 snmp-v2c snmp-v3 ipv6 lan
+# bats test_tags= snmp-v1, snmp-v2c, snmp-v3, ipv6, lan
 @test "Can scan range of default LAN IPv6 targets for snmp v1, v2c, and v3" {
     run \
       masscan \
