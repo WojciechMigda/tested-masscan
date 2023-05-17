@@ -1,16 +1,5 @@
 bats_require_minimum_version 1.5.0
 
-setup_file() {
-    # load() in setup_file does not work
-    #load 'test_helper/bats-support/load'
-    #load 'test_helper/bats-assert/load'
-    echo
-}
-
-#teardown_file() {
-#    echo
-#}
-
 setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
@@ -18,14 +7,10 @@ setup() {
     load 'test_helper/common-assert'
 }
 
-#teardown() {
-#    echo
-#}
-
 # bats file_tags= tcp, lan
 
 # bats test_tags= ipv4
-@test "Can scan single default LAN IPv4 target for multiple tcp ports" {
+@test "Can scan single default LAN IPv4 target for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -39,7 +24,7 @@ setup() {
 }
 
 # bats test_tags= ipv4
-@test "Can scan two default LAN IPv4 targets for multiple tcp ports" {
+@test "Can scan two default LAN IPv4 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -57,7 +42,7 @@ setup() {
 }
 
 # bats test_tags= ipv4
-@test "Can scan range of default LAN IPv4 targets for multiple tcp ports" {
+@test "Can scan range of default LAN IPv4 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -79,7 +64,7 @@ setup() {
 }
 
 # bats test_tags= ipv6
-@test "Can scan single default LAN IPv6 target for multiple tcp ports" {
+@test "Can scan single default LAN IPv6 target for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -94,7 +79,7 @@ setup() {
 
 
 # bats test_tags= ipv6
-@test "Can scan two default LAN IPv6 targets for multiple tcp ports" {
+@test "Can scan two default LAN IPv6 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -112,7 +97,7 @@ setup() {
 }
 
 # bats test_tags= ipv6
-@test "Can scan range of default LAN IPv6 targets for multiple tcp ports" {
+@test "Can scan range of default LAN IPv6 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \

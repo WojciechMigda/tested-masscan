@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
 MY_ADDR_IPv4=`ip -4 addr show to 10.0.0.0/8 up`
 
@@ -26,10 +26,13 @@ ip -4 route change default via ${ROUTER_IPv4} dev eth0
 echo "Switching to ipv6 router ${ROUTER_IPv6}"
 route -6n
 ip -6 route del default via ${OLD_DEFAULT_ROUTER_IPv6} || true
-ip -6 route add default via ${ROUTER_IPv6} dev eth0 metric 1024
+ip -6 route add default via ${ROUTER_IPv6} dev eth0 metric 1024 || true
 
 for port in 22 135 137 1433 1521 3389 5985; do
   netcat -vkl $port &
   netcat -6vkl $port &
 done
+
+./activate-sctp.sh
+
 sleep infinity

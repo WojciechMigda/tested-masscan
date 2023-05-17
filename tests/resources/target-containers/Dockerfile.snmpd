@@ -6,9 +6,9 @@ ARG AS9_ROUTER_IPv4
 ARG AS9_ROUTER_IPv6
 
 RUN \
-    yum install -y iproute net-tools iputils mtr && \
+    yum install -y iproute net-tools iputils mtr nmap-ncat && \
     yum clean all
 
-COPY wrapped-snmpd-bootstrap.sh /
+COPY wrapped-snmpd-bootstrap.sh activate-sctp.sh /
 
 ENTRYPOINT ["/wrapped-snmpd-bootstrap.sh"]

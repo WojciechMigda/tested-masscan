@@ -25,7 +25,7 @@ setup() {
 # bats file_tags= tcp, wan
 
 # bats test_tags= ipv4
-@test "Can scan single default WAN IPv4 target for multiple tcp ports" {
+@test "Can scan single default WAN IPv4 target for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -39,7 +39,7 @@ setup() {
 }
 
 # bats test_tags= ipv4
-@test "Can scan two default WAN IPv4 targets for multiple tcp ports" {
+@test "Can scan two default WAN IPv4 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -57,7 +57,7 @@ setup() {
 }
 
 # bats test_tags= ipv4
-@test "Can scan range of default WAN IPv4 targets for multiple tcp ports" {
+@test "Can scan range of default WAN IPv4 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -79,7 +79,7 @@ setup() {
 }
 
 # bats test_tags= ipv6
-@test "Can scan single default WAN IPv6 target for multiple tcp ports" {
+@test "Can scan single default WAN IPv6 target for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -94,7 +94,7 @@ setup() {
 
 
 # bats test_tags= ipv6
-@test "Can scan two default WAN IPv6 targets for multiple tcp ports" {
+@test "Can scan two default WAN IPv6 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \
@@ -112,7 +112,7 @@ setup() {
 }
 
 # bats test_tags= ipv6
-@test "Can scan range of default WAN IPv6 targets for multiple tcp ports" {
+@test "Can scan range of default WAN IPv6 targets for multiple TCP ports" {
     run \
       masscan \
         -p23,135,137 \

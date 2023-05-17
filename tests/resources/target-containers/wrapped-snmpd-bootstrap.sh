@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
 MY_ADDR_IPv4=`ip -4 addr show to 10.0.0.0/8 up`
 
@@ -26,6 +26,8 @@ ip -4 route change default via ${ROUTER_IPv4} dev eth0
 echo "Switching to ipv6 router ${ROUTER_IPv6}"
 route -6n
 ip -6 route del default via ${OLD_DEFAULT_ROUTER_IPv6} || true
-ip -6 route add default via ${ROUTER_IPv6} dev eth0 metric 1024
+ip -6 route change default via ${ROUTER_IPv6} dev eth0 metric 1024 || true
+
+./activate-sctp.sh
 
 ./bootstrap.sh $@

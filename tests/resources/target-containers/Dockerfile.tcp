@@ -7,9 +7,9 @@ ARG AS9_ROUTER_IPv6
 
 RUN \
     apt-get update && \
-    apt-get -y install iproute2 net-tools iputils-ping mtr-tiny netcat-openbsd && \
+    apt-get -y install iproute2 net-tools iputils-ping mtr-tiny netcat-openbsd ncat && \
     apt-get clean
 
-COPY tcp-bootstrap.sh /
+COPY tcp-bootstrap.sh activate-sctp.sh /
 
 ENTRYPOINT ["/tcp-bootstrap.sh"]
